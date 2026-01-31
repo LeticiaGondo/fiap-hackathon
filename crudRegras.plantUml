@@ -1,0 +1,53 @@
+7.1 Componentes (Clean Architecture)
+@startuml
+skinparam componentStyle rectangle
+
+package "Interface Adapters" {
+  [RuleSetController]
+  [ProcedureController]
+  [RulePresenter/Mapper]
+}
+
+package "Application (Use Cases)" {
+  [CreateRuleSetUseCase]
+  [AddRuleUseCase]
+  [PublishRuleSetUseCase]
+  [CreateProcedureUseCase]
+  [SearchUseCases]
+}
+
+package "Domain" {
+  [RuleSet]
+  [Rule]
+  [Condition]
+  [Procedure]
+}
+
+package "Infrastructure" {
+  [RuleSetRepositoryImpl]
+  [ProcedureRepositoryImpl]
+  [AuditRepositoryImpl]
+  database "PostgreSQL" as DB
+}
+
+[RuleSetController] --> [CreateRuleSetUseCase]
+[RuleSetController] --> [AddRuleUseCase]
+[RuleSetController] --> [PublishRuleSetUseCase]
+[ProcedureController] --> [CreateProcedureUseCase]
+[ProcedureController] --> [SearchUseCases]
+
+[CreateRuleSetUseCase] --> [RuleSetRepositoryImpl]
+[AddRuleUseCase] --> [RuleSetRepositoryImpl]
+[PublishRuleSetUseCase] --> [RuleSetRepositoryImpl]
+[PublishRuleSetUseCase] --> [AuditRepositoryImpl]
+[CreateProcedureUseCase] --> [ProcedureRepositoryImpl]
+[SearchUseCases] --> [ProcedureRepositoryImpl]
+[SearchUseCases] --> [RuleSetRepositoryImpl]
+
+[RuleSetRepositoryImpl] --> DB
+[ProcedureRepositoryImpl] --> DB
+[AuditRepositoryImpl] --> DB
+
+@enduml
+
+7.2 Sequência: publicar um RuleSet (com versionamento)

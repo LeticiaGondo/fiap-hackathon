@@ -1,0 +1,43 @@
+@startuml
+title Fluxo - Gerar Checklist de Validação (API)
+
+actor "Sistema Legado SUS" as Legado
+participant "ValidationController\n(REST)" as Controller
+participant "GerarChecklistValidacaoUseCase\n(Application)" as UseCase
+participant "RegrasRepository\n(Port)" as RegrasRepo
+participant "ProcedimentoRepository\n(Port)" as ProcRepo
+participant "RuleEngine\n(Domain Service)" as Engine
+participant "ExecucaoValidacaoRepository\n(Port)" as ExecRepo
+database "DB API" as DB
+
+Legado -> Controller: POST /validacoes/pedidos/{pedidoId}/checklist\n{contexto, pedidoSnapshot}
+Controller -> UseCase: executar(pedidoId, contexto, pedidoSnapshot)
+
+UseCase -> ProcRepo: obterProcedimentos(pedidoSnapshot)
+ProcRepo -> DB: SELECT procedimentos (se necessário)
+DB --> ProcRepo: procedimentos
+ProcRepo --> UseCase: procedimentos
+
+loop para cada procedimento
+  UseCase -> RegrasRepo: buscarRegrasAplicaveis(procedimento, contexto)
+  RegrasRepo -> DB: SELECT aplicacao_regra + regra_documental\n(filtro por contexto + fallback)
+  DB --> RegrasRepo: regras aplicáveis
+  RegrasRepo --> UseCase: regras aplicáveis
+
+  loop para cada regra
+    UseCase -> Engine: avaliar(regra, pedidoSnapshot.campos[campo])
+    Engine --> UseCase: itemChecklist(preenchido, mensagem, severidade)
+  end
+end
+
+UseCase -> UseCase: consolidarResultado()\n(se bloqueante pendente => PENDENTE)
+
+UseCase -> ExecRepo: salvarExecucao(pedidoId, resultado, detalhes)
+ExecRepo -> DB: INSERT execucao_validacao
+DB --> ExecRepo: ok
+ExecRepo --> UseCase: ok
+
+UseCase --> Controller: ChecklistResponse(resultado, checklists, resumo)
+Controller --> Legado: 200 OK\nChecklistResponse
+
+@enduml
