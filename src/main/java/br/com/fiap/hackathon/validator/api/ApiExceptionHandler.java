@@ -13,11 +13,11 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<Map<String, String>> handleDomain(DomainValidationException ex) {
-        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+        return ResponseEntity.badRequest().body(Map.of("mensagem", ex.getMessage()));
     }
 
     @ExceptionHandler(UseCaseValidationException.class)
     public ResponseEntity<Map<String, String>> handleUseCase(UseCaseValidationException ex) {
-        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+        return ResponseEntity.badRequest().body(Map.of("mensagem", ex.getMessage()));
     }
 }
