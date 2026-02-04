@@ -1,6 +1,5 @@
-package br.com.fiap.hackathon.validator.domain.entity;
+package br.com.fiap.hackathon.validator.domain;
 
-import br.com.fiap.hackathon.validator.domain.Cpf;
 import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
 
 public class Paciente {
@@ -15,5 +14,13 @@ public class Paciente {
 
         this.cpf = cpf;
         this.nome = nome;
+    }
+
+    public Cpf getCpf() {
+        return cpf;
+    }
+
+    public String getNome() {
+        return nome;
     }
 }

@@ -2,7 +2,7 @@ package br.com.fiap.hackathon.validator.api;
 
 import br.com.fiap.hackathon.validator.api.dto.EncaminhamentoRequest;
 import br.com.fiap.hackathon.validator.domain.Cpf;
-import br.com.fiap.hackathon.validator.domain.entity.Encaminhamento;
+import br.com.fiap.hackathon.validator.domain.Encaminhamento;
 import br.com.fiap.hackathon.validator.domain.exception.CpfInvalidoException;
 import br.com.fiap.hackathon.validator.domain.exception.CpfObrigatorioException;
 import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;

@@ -1,4 +1,4 @@
-package br.com.fiap.hackathon.validator.domain.entity;
+package br.com.fiap.hackathon.validator.domain;
 
 import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
 
@@ -22,5 +22,21 @@ public class Encaminhamento {
         this.cid = cid;
         this.medico = medico;
         this.paciente = paciente;
+    }
+
+    public String getProtocolo() {
+        return protocolo;
+    }
+
+    public String getCid() {
+        return cid;
+    }
+
+    public Medico getMedico() {
+        return medico;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
     }
 }

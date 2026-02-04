@@ -1,5 +1,6 @@
 package br.com.fiap.hackathon.validator.domain.entity;
 
+import br.com.fiap.hackathon.validator.domain.Medico;
 import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
 import org.junit.jupiter.api.Test;
 

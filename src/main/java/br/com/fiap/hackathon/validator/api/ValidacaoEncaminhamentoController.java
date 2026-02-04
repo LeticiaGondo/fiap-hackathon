@@ -3,8 +3,8 @@ package br.com.fiap.hackathon.validator.api;
 import br.com.fiap.hackathon.validator.api.dto.EncaminhamentoRequest;
 import br.com.fiap.hackathon.validator.api.dto.EncaminhamentoResponse;
 import br.com.fiap.hackathon.validator.application.useCase.ValidarEncaminhamentoUseCase;
-import br.com.fiap.hackathon.validator.application.useCase.model.ResultadoValidacao;
-import br.com.fiap.hackathon.validator.domain.entity.Encaminhamento;
+import br.com.fiap.hackathon.validator.application.model.ResultadoValidacao;
+import br.com.fiap.hackathon.validator.domain.Encaminhamento;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +32,6 @@ public class ValidacaoEncaminhamentoController {
         EncaminhamentoResponse response =
                 new EncaminhamentoResponse(resultado.getPendencias());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().build();
     }
 }

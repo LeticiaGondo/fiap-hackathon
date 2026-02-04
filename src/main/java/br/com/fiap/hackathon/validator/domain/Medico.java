@@ -1,4 +1,4 @@
-package br.com.fiap.hackathon.validator.domain.entity;
+package br.com.fiap.hackathon.validator.domain;
 
 import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
 
@@ -27,5 +27,15 @@ public class Medico {
         this.crmNumero = crmNumero;
     }
 
+    public String getNome() {
+        return nome;
+    }
 
+    public String getCrmUf() {
+        return crmUf;
+    }
+
+    public String getCrmNumero() {
+        return crmNumero;
+    }
 }

@@ -1,4 +1,4 @@
-package br.com.fiap.hackathon.validator.application.useCase.exception;
+package br.com.fiap.hackathon.validator.application.exception;
 
 import java.util.List;
 

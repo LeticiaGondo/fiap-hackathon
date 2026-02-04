@@ -1,4 +1,4 @@
-package br.com.fiap.hackathon.validator.application.useCase.model;
+package br.com.fiap.hackathon.validator.application.model;
 
 import java.util.List;
 
