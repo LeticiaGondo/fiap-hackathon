@@ -75,4 +75,8 @@ public class EncaminhamentoEntity {
     public void setPacienteCpf(String pacienteCpf) {
         this.pacienteCpf = pacienteCpf;
     }
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
 }

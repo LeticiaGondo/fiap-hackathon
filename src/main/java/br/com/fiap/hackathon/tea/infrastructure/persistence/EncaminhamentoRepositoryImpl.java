@@ -4,6 +4,7 @@ import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
 import br.com.fiap.hackathon.tea.domain.Encaminhamento;
 import br.com.fiap.hackathon.tea.domain.Medico;
 import br.com.fiap.hackathon.tea.domain.Paciente;
+import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import br.com.fiap.hackathon.tea.infrastructure.persistence.entity.EncaminhamentoEntity;
 import br.com.fiap.hackathon.tea.infrastructure.persistence.repository.EncaminhamentoJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -52,5 +53,15 @@ public class EncaminhamentoRepositoryImpl implements EncaminhamentoRepository {
     public boolean existePorProtocolo(String protocolo) {
         return jpaRepository.existsByProtocolo(protocolo);
     }
+
+    @Override
+    public String buscaEspecialidaePorProtocolo(String protocolo) {
+        return jpaRepository.findByProtocolo(protocolo)
+                .map(EncaminhamentoEntity::getEspecialidade)
+                .orElseThrow(() ->
+                        new ValidacaoException("Encaminhamento não encontrado para o protocolo " + protocolo)
+                );
+    }
+
 
 }

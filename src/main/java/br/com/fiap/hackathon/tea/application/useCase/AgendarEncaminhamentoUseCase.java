@@ -29,6 +29,8 @@ public class AgendarEncaminhamentoUseCase {
             throw new ValidacaoException(ERRO_NAO_VALIDADO);
         }
 
-        return agendamentoGateway.agendar(protocolo);
+        String especialidade = encaminhamentoRepository.buscaEspecialidaePorProtocolo(protocolo);
+
+        return agendamentoGateway.agendar(protocolo, especialidade);
     }
 }

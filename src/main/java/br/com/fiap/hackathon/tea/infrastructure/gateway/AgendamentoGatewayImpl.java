@@ -11,13 +11,13 @@ public class AgendamentoGatewayImpl implements AgendamentoGateway {
 
 
     @Override
-    public AgendamentoResponse agendar(String protocolo) {
+    public AgendamentoResponse agendar(String protocolo, String especialidade) {
         return new AgendamentoResponse(
                 protocolo,
                 "AGENDADO",
                 LocalDateTime.now().plusDays(3),
                 "UBS Central",
-                "Investigação TEA"
+                especialidade
         );
     }
 }
