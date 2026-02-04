@@ -12,31 +12,31 @@ import java.time.LocalDate;
 public class EncaminhamentoEntity {
 
     @Id
-    @Column(name = "protocolo")
+    @Column(name = "protocolo", nullable = false)
     private String protocolo;
 
-    @Column(name = "data_encaminhamento")
+    @Column(name = "data_encaminhamento", nullable = false)
     private LocalDate dataEncaminhamento;
 
-    @Column(name = "especialidade")
+    @Column(name = "especialidade", nullable = false)
     private String especialidade;
 
-    @Column(name = "cid")
+    @Column(name = "cid", nullable = false)
     private String cid;
 
-    @Column(name = "motivo_solicitacao")
+    @Column(name = "motivo_solicitacao", nullable = false)
     private String motivoSolicitacao;
 
-    @Column(name = "medico_nome")
+    @Column(name = "medico_nome", nullable = false)
     private String medicoNome;
 
-    @Column(name = "medico_crm")
+    @Column(name = "medico_crm", nullable = false)
     private String medicoCrm;
 
-    @Column(name = "paciente_nome")
+    @Column(name = "paciente_nome", nullable = false)
     private String pacienteNome;
 
-    @Column(name = "paciente_cpf")
+    @Column(name = "paciente_cpf", nullable = false)
     private String pacienteCpf;
 
 
