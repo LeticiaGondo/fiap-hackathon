@@ -1,8 +1,6 @@
 package br.com.fiap.hackathon.validator.domain.entity;
 
-import br.com.fiap.hackathon.validator.domain.exception.DomainValidationException;
-
-import java.time.LocalDate;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
 
 public class Encaminhamento {
 
@@ -30,7 +28,7 @@ public class Encaminhamento {
 
     public Encaminhamento(String protocolo, String cid, Medico medico, Paciente paciente) {
         if (protocolo == null || protocolo.isBlank()) {
-            throw new DomainValidationException("Protocolo é obrigatório");
+            throw new ValidacaoDominioException("Protocolo é obrigatório");
         }
 
         this.protocolo = protocolo;

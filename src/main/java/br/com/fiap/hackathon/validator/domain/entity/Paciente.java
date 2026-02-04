@@ -1,17 +1,19 @@
 package br.com.fiap.hackathon.validator.domain.entity;
 
 import br.com.fiap.hackathon.validator.domain.Cpf;
-import br.com.fiap.hackathon.validator.domain.Endereco;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
 
 public class Paciente {
 
     private final Cpf cpf;
     private String nome;
-    private Endereco endereco;
 
-    public Paciente(Cpf cpf, String nome, Endereco endereco) {
+    public Paciente(Cpf cpf, String nome) {
+        if(nome == null || nome.isBlank()) {
+            throw new ValidacaoDominioException("Nome do paciente é obrigatório");
+        }
+
         this.cpf = cpf;
         this.nome = nome;
-        this.endereco = endereco;
     }
 }

@@ -5,10 +5,14 @@ import br.com.fiap.hackathon.validator.domain.Crm;
 public class Medico {
 
     private String nome;
-    private Crm crm;
+    private String crmUf;
+    private String crmNumero;
 
-    public Medico(String nome, Crm crm) {
+    public Medico(String nome, String crmUf, String crmNumero) {
         this.nome = nome;
-        this.crm = crm;
+        this.crmUf = crmUf;
+        this.crmNumero = crmNumero;
     }
+
+
 }
