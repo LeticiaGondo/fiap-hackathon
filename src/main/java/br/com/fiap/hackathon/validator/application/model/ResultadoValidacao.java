@@ -17,7 +17,4 @@ public class ResultadoValidacao {
         this.pendencias = pendencias;
     }
 
-    public static ResultadoValidacao valido() {
-        return new ResultadoValidacao( List.of());
-    }
 }

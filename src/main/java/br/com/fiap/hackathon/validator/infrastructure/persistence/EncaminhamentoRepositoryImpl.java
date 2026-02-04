@@ -48,4 +48,9 @@ public class EncaminhamentoRepositoryImpl implements EncaminhamentoRepository {
         jpaRepository.save(entity);
     }
 
+    @Override
+    public boolean existePorProtocolo(String protocolo) {
+        return jpaRepository.existsByProtocolo(protocolo);
+    }
+
 }

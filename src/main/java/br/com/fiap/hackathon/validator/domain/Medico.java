@@ -1,6 +1,6 @@
 package br.com.fiap.hackathon.validator.domain;
 
-import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoException;
 
 public class Medico {
 
@@ -11,15 +11,15 @@ public class Medico {
     public Medico(String nome, String crmUf, String crmNumero) {
 
         if (nome == null || nome.isBlank()) {
-            throw new ValidacaoDominioException("Nome do médico é obrigatório");
+            throw new ValidacaoException("Nome do médico é obrigatório");
         }
 
         if (crmUf == null || crmUf.isBlank()) {
-            throw new ValidacaoDominioException("UF do CRM é obrigatória");
+            throw new ValidacaoException("UF do CRM é obrigatória");
         }
 
         if (crmNumero == null || crmNumero.isBlank()) {
-            throw new ValidacaoDominioException("Número do CRM é obrigatório");
+            throw new ValidacaoException("Número do CRM é obrigatório");
         }
 
         this.nome = nome;

@@ -4,7 +4,7 @@ import br.com.fiap.hackathon.validator.domain.Cpf;
 import br.com.fiap.hackathon.validator.domain.Encaminhamento;
 import br.com.fiap.hackathon.validator.domain.Medico;
 import br.com.fiap.hackathon.validator.domain.Paciente;
-import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,8 +21,8 @@ class EncaminhamentoTest {
 
     @Test
     void deveLancarException_quandoProtocoloEstiverNulo() {
-        ValidacaoDominioException ex = assertThrows(
-                ValidacaoDominioException.class,
+        ValidacaoException ex = assertThrows(
+                ValidacaoException.class,
                 () -> new Encaminhamento(null, "cid", getMedico(), getPaciente())
         );
 
@@ -31,15 +31,15 @@ class EncaminhamentoTest {
 
     @Test
     void deveLancarException_quandoProtocoloForVazio() {
-        ValidacaoDominioException ex1 = assertThrows(
-                ValidacaoDominioException.class,
+        ValidacaoException ex1 = assertThrows(
+                ValidacaoException.class,
                 () -> new Encaminhamento("", "cid", getMedico(), getPaciente())
         );
 
         assertEquals("Protocolo é obrigatório", ex1.getMessage());
 
-        ValidacaoDominioException ex2 = assertThrows(
-                ValidacaoDominioException.class,
+        ValidacaoException ex2 = assertThrows(
+                ValidacaoException.class,
                 () -> new Encaminhamento("  ", "cid", getMedico(), getPaciente())
         );
 
@@ -48,8 +48,8 @@ class EncaminhamentoTest {
 
     @Test
     void deveLancarException_quandoCidEstiverNulo() {
-        ValidacaoDominioException ex = assertThrows(
-                ValidacaoDominioException.class,
+        ValidacaoException ex = assertThrows(
+                ValidacaoException.class,
                 () -> new Encaminhamento("123", null, getMedico(), getPaciente())
         );
 
@@ -58,15 +58,15 @@ class EncaminhamentoTest {
 
     @Test
     void deveLancarException_quandoCidForVazio() {
-        ValidacaoDominioException ex1 = assertThrows(
-                ValidacaoDominioException.class,
+        ValidacaoException ex1 = assertThrows(
+                ValidacaoException.class,
                 () -> new Encaminhamento("123", "", getMedico(), getPaciente())
         );
 
         assertEquals("CID é obrigatório", ex1.getMessage());
 
-        ValidacaoDominioException ex2 = assertThrows(
-                ValidacaoDominioException.class,
+        ValidacaoException ex2 = assertThrows(
+                ValidacaoException.class,
                 () -> new Encaminhamento("123", " ", getMedico(), getPaciente())
         );
 

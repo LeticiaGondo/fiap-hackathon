@@ -5,7 +5,7 @@ import br.com.fiap.hackathon.validator.domain.Cpf;
 import br.com.fiap.hackathon.validator.domain.Encaminhamento;
 import br.com.fiap.hackathon.validator.domain.exception.CpfInvalidoException;
 import br.com.fiap.hackathon.validator.domain.exception.CpfObrigatorioException;
-import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -22,9 +22,9 @@ public interface EncaminhamentoMapper {
         try {
             return new Cpf(numero);
         } catch (CpfObrigatorioException e) {
-            throw new ValidacaoDominioException("CPF do paciente é obrigatório");
+            throw new ValidacaoException("CPF do paciente é obrigatório");
         } catch (CpfInvalidoException e) {
-            throw new ValidacaoDominioException("Cpf do paciente é inválido");
+            throw new ValidacaoException("Cpf do paciente é inválido");
         }
     }
 

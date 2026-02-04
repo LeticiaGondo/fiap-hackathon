@@ -1,6 +1,6 @@
 package br.com.fiap.hackathon.validator.domain;
 
-import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoException;
 
 public class Encaminhamento {
 
@@ -11,11 +11,11 @@ public class Encaminhamento {
 
     public Encaminhamento(String protocolo, String cid, Medico medico, Paciente paciente) {
         if (protocolo == null || protocolo.isBlank()) {
-            throw new ValidacaoDominioException("Protocolo é obrigatório");
+            throw new ValidacaoException("Protocolo é obrigatório");
         }
 
         if (cid == null || cid.isBlank()) {
-            throw new ValidacaoDominioException("CID é obrigatório");
+            throw new ValidacaoException("CID é obrigatório");
         }
 
         this.protocolo = protocolo;

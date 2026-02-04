@@ -4,4 +4,6 @@ import br.com.fiap.hackathon.validator.infrastructure.persistence.entity.Encamin
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EncaminhamentoJpaRepository extends JpaRepository<EncaminhamentoEntity, String> {
+
+    boolean existsByProtocolo(String protocolo);
 }

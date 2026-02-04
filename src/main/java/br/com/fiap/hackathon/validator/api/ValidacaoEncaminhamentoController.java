@@ -27,10 +27,7 @@ public class ValidacaoEncaminhamentoController {
     public ResponseEntity<EncaminhamentoResponse> validar(@RequestBody EncaminhamentoRequest request) {
 
         Encaminhamento domain = encaminhamentoMapper.toDomain(request);
-        ResultadoValidacao resultado = useCase.execute(domain);
-
-        EncaminhamentoResponse response =
-                new EncaminhamentoResponse(resultado.getPendencias());
+        useCase.execute(domain);
 
         return ResponseEntity.ok().build();
     }

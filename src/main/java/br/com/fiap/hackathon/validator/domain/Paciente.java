@@ -1,6 +1,6 @@
 package br.com.fiap.hackathon.validator.domain;
 
-import br.com.fiap.hackathon.validator.domain.exception.ValidacaoDominioException;
+import br.com.fiap.hackathon.validator.domain.exception.ValidacaoException;
 
 public class Paciente {
 
@@ -9,7 +9,7 @@ public class Paciente {
 
     public Paciente(Cpf cpf, String nome) {
         if(nome == null || nome.isBlank()) {
-            throw new ValidacaoDominioException("Nome do paciente é obrigatório");
+            throw new ValidacaoException("Nome do paciente é obrigatório");
         }
 
         this.cpf = cpf;
