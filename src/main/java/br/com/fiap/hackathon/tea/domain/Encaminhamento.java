@@ -1,6 +1,6 @@
-package br.com.fiap.hackathon.tea.domain.encaminhamento;
+package br.com.fiap.hackathon.tea.domain;
 
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.ValidacaoException;
+import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 
 public class Encaminhamento {
 

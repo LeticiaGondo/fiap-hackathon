@@ -1,9 +1,8 @@
 package br.com.fiap.hackathon.tea.application.useCase;
 
-import br.com.fiap.hackathon.tea.application.validacao.repository.EncaminhamentoRepository;
-import br.com.fiap.hackathon.tea.application.validacao.useCase.ValidarEncaminhamentoUseCase;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Encaminhamento;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.ValidacaoException;
+import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
+import br.com.fiap.hackathon.tea.domain.Encaminhamento;
+import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

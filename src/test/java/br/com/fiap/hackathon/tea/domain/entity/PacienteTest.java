@@ -1,8 +1,8 @@
 package br.com.fiap.hackathon.tea.domain.entity;
 
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Cpf;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Paciente;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.ValidacaoException;
+import br.com.fiap.hackathon.tea.domain.Cpf;
+import br.com.fiap.hackathon.tea.domain.Paciente;
+import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

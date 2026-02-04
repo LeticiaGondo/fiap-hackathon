@@ -1,6 +1,6 @@
-package br.com.fiap.hackathon.tea.application.validacao.repository;
+package br.com.fiap.hackathon.tea.application.port;
 
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Encaminhamento;
+import br.com.fiap.hackathon.tea.domain.Encaminhamento;
 
 public interface EncaminhamentoRepository {
     void salvar(Encaminhamento encaminhamento);

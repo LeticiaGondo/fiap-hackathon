@@ -1,9 +1,9 @@
 package br.com.fiap.hackathon.tea.infrastructure.persistence;
 
-import br.com.fiap.hackathon.tea.application.validacao.repository.EncaminhamentoRepository;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Encaminhamento;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Medico;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Paciente;
+import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
+import br.com.fiap.hackathon.tea.domain.Encaminhamento;
+import br.com.fiap.hackathon.tea.domain.Medico;
+import br.com.fiap.hackathon.tea.domain.Paciente;
 import br.com.fiap.hackathon.tea.infrastructure.persistence.entity.EncaminhamentoEntity;
 import br.com.fiap.hackathon.tea.infrastructure.persistence.repository.EncaminhamentoJpaRepository;
 import org.springframework.stereotype.Repository;

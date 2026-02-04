@@ -1,7 +1,7 @@
-package br.com.fiap.hackathon.tea.domain.encaminhamento;
+package br.com.fiap.hackathon.tea.domain;
 
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.CpfInvalidoException;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.CpfObrigatorioException;
+import br.com.fiap.hackathon.tea.domain.exception.CpfInvalidoException;
+import br.com.fiap.hackathon.tea.domain.exception.CpfObrigatorioException;
 
 public class Cpf {
 

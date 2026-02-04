@@ -1,11 +1,11 @@
-package br.com.fiap.hackathon.tea.api.validacao.mapper;
+package br.com.fiap.hackathon.tea.api.mapper;
 
-import br.com.fiap.hackathon.tea.api.validacao.dto.EncaminhamentoRequest;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Cpf;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Encaminhamento;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.CpfInvalidoException;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.CpfObrigatorioException;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.ValidacaoException;
+import br.com.fiap.hackathon.tea.api.dto.EncaminhamentoRequest;
+import br.com.fiap.hackathon.tea.domain.Cpf;
+import br.com.fiap.hackathon.tea.domain.Encaminhamento;
+import br.com.fiap.hackathon.tea.domain.exception.CpfInvalidoException;
+import br.com.fiap.hackathon.tea.domain.exception.CpfObrigatorioException;
+import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

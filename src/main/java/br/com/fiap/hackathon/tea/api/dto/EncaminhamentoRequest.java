@@ -1,4 +1,4 @@
-package br.com.fiap.hackathon.tea.api.validacao.dto;
+package br.com.fiap.hackathon.tea.api.dto;
 
 public record EncaminhamentoRequest(
         String protocolo,

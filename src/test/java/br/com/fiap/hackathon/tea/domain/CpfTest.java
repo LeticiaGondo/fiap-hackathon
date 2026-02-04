@@ -1,8 +1,7 @@
 package br.com.fiap.hackathon.tea.domain;
 
-import br.com.fiap.hackathon.tea.domain.encaminhamento.Cpf;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.CpfInvalidoException;
-import br.com.fiap.hackathon.tea.domain.encaminhamento.exception.CpfObrigatorioException;
+import br.com.fiap.hackathon.tea.domain.exception.CpfInvalidoException;
+import br.com.fiap.hackathon.tea.domain.exception.CpfObrigatorioException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

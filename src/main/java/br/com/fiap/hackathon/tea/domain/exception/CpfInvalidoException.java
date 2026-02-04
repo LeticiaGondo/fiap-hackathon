@@ -1,4 +1,4 @@
-package br.com.fiap.hackathon.tea.domain.encaminhamento.exception;
+package br.com.fiap.hackathon.tea.domain.exception;
 
 public class CpfInvalidoException extends RuntimeException{
 
