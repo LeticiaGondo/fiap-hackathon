@@ -9,13 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class CpfTest {
 
     @Test
-    void deveLancarCpfObrigatorioException_quandoCpfForNull() {
+    void deveLancarCpfObrigatorioException_quandoCpfForNulo() {
         assertThrows(CpfObrigatorioException.class, () -> new Cpf(null));
     }
 
     @Test
-    void deveLancarCpfObrigatorioException_quandoCpfForBlank() {
+    void deveLancarCpfObrigatorioException_quandoCpfForVazio() {
         assertThrows(CpfObrigatorioException.class, () -> new Cpf("   "));
+        assertThrows(CpfObrigatorioException.class, () -> new Cpf(""));
     }
 
     @Test

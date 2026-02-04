@@ -9,26 +9,13 @@ public class Encaminhamento {
     private Medico medico;
     private Paciente paciente;
 
-
-    public Medico getMedico() {
-        return medico;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public String getCid() {
-        return cid;
-    }
-
-    public String getProtocolo() {
-        return protocolo;
-    }
-
     public Encaminhamento(String protocolo, String cid, Medico medico, Paciente paciente) {
         if (protocolo == null || protocolo.isBlank()) {
             throw new ValidacaoDominioException("Protocolo é obrigatório");
+        }
+
+        if (cid == null || cid.isBlank()) {
+            throw new ValidacaoDominioException("CID é obrigatório");
         }
 
         this.protocolo = protocolo;

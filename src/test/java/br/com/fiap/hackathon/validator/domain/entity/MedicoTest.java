@@ -15,7 +15,7 @@ class MedicoTest {
     }
 
     @Test
-    void deveLancarException_quandoNomeEstiverNulo() {
+    void deveLancarException_quandoNomeForNulo() {
         ValidacaoDominioException ex = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico(null, "SP", "123456")
@@ -25,27 +25,24 @@ class MedicoTest {
     }
 
     @Test
-    void deveLancarException_quandoNomeEstiverVazio() {
-        ValidacaoDominioException ex = assertThrows(
+    void deveLancarException_quandoNomeForVazio() {
+        ValidacaoDominioException ex1 = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico("", "SP", "123456")
         );
 
-        assertEquals("Nome do médico é obrigatório", ex.getMessage());
-    }
+        assertEquals("Nome do médico é obrigatório", ex1.getMessage());
 
-    @Test
-    void deveLancarException_quandoNomeEstiverEmBranco() {
-        ValidacaoDominioException ex = assertThrows(
+        ValidacaoDominioException ex2 = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico("   ", "SP", "123456")
         );
 
-        assertEquals("Nome do médico é obrigatório", ex.getMessage());
+        assertEquals("Nome do médico é obrigatório", ex2.getMessage());
     }
 
     @Test
-    void deveLancarException_quandoCrmUfEstiverNulo() {
+    void deveLancarException_quandoCrmUfForNulo() {
         ValidacaoDominioException ex = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico("Dr. João", null, "123456")
@@ -55,17 +52,26 @@ class MedicoTest {
     }
 
     @Test
-    void deveLancarException_quandoCrmUfEstiverEmBranco() {
-        ValidacaoDominioException ex = assertThrows(
+    void deveLancarException_quandoCrmUfForVazio() {
+        ValidacaoDominioException ex1 = assertThrows(
+                ValidacaoDominioException.class,
+                () -> new Medico("Dr. João", "", "123456")
+        );
+
+        assertEquals("UF do CRM é obrigatória", ex1.getMessage());
+
+        ValidacaoDominioException ex2 = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico("Dr. João", "   ", "123456")
         );
 
-        assertEquals("UF do CRM é obrigatória", ex.getMessage());
+        assertEquals("UF do CRM é obrigatória", ex2.getMessage());
     }
 
+
+
     @Test
-    void deveLancarException_quandoCrmNumeroEstiverNulo() {
+    void deveLancarException_quandoCrmNumeroForNulo() {
         ValidacaoDominioException ex = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico("Dr. João", "SP", null)
@@ -75,13 +81,21 @@ class MedicoTest {
     }
 
     @Test
-    void deveLancarException_quandoCrmNumeroEstiverEmBranco() {
-        ValidacaoDominioException ex = assertThrows(
+    void deveLancarException_quandoCrmNumeroForVazio() {
+
+        ValidacaoDominioException ex1 = assertThrows(
                 ValidacaoDominioException.class,
                 () -> new Medico("Dr. João", "SP", "   ")
         );
 
-        assertEquals("Número do CRM é obrigatório", ex.getMessage());
+        assertEquals("Número do CRM é obrigatório", ex1.getMessage());
+
+        ValidacaoDominioException ex2 = assertThrows(
+                ValidacaoDominioException.class,
+                () -> new Medico("Dr. João", "SP", "   ")
+        );
+
+        assertEquals("Número do CRM é obrigatório", ex2.getMessage());
     }
 
 }
