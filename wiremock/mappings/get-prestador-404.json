@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/prestador",
+    "queryParameters": {
+      "crmUf": { "equalTo": "SP" },
+      "crmNumero": { "equalTo": "999999" }
+    },
+    "headers": {
+      "Authorization": { "equalTo": "Bearer test" },
+      "Accept": { "contains": "application/json" }
+    }
+  },
+  "response": {
+    "status": 404
+  }
+}

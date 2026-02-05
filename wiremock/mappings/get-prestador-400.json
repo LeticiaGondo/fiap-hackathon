@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/prestador",
+    "queryParameters": {
+      "crmUf": { "equalTo": "SP" },
+      "crmNumero": { "equalTo": "000000" }
+    },
+    "headers": {
+      "Authorization": { "equalTo": "Bearer test" },
+      "Accept": { "contains": "application/json" }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "prestador-400.json"
+  }
+}

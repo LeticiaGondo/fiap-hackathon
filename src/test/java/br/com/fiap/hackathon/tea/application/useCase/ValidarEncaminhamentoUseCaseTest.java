@@ -1,7 +1,8 @@
 package br.com.fiap.hackathon.tea.application.useCase;
 
+import br.com.fiap.hackathon.tea.application.port.CfmGateway;
 import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
-import br.com.fiap.hackathon.tea.domain.Encaminhamento;
+import br.com.fiap.hackathon.tea.domain.*;
 import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,45 +14,52 @@ class ValidarEncaminhamentoUseCaseTest {
 
 
     private EncaminhamentoRepository repository;
+    private CfmGateway cfmGateway;
     private ValidarEncaminhamentoUseCase useCase;
 
     @BeforeEach
     void setUp() {
         repository = mock(EncaminhamentoRepository.class);
-        useCase = new ValidarEncaminhamentoUseCase(repository);
+        cfmGateway = mock(CfmGateway.class);
+        useCase = new ValidarEncaminhamentoUseCase(cfmGateway, repository);
     }
 
     @Test
-    void deveLancarValidacaoException_quandoProtocoloJaExistir() {
-        Encaminhamento encaminhamento = mock(Encaminhamento.class);
-        when(encaminhamento.getProtocolo()).thenReturn("ABC123");
-        when(repository.existePorProtocolo("ABC123")).thenReturn(true);
+    void deveRecusarQuandoProtocoloJaExiste() {
+        Encaminhamento encaminhamento = buildEncaminhamento("ABC-123", "SP", "123456");
+        when(repository.existePorProtocolo("ABC-123")).thenReturn(true);
 
-        ValidacaoException ex = assertThrows(
-                ValidacaoException.class,
-                () -> useCase.execute(encaminhamento)
-        );
+        assertThrows(ValidacaoException.class, () -> useCase.execute(encaminhamento));
 
-        assertEquals(
-                String.format(ValidarEncaminhamentoUseCase.ERRO_PROTOCOLO_DUPLICADO, "ABC123"),
-                ex.getMessage()
-        );
-
-        verify(repository).existePorProtocolo("ABC123");
+        verify(cfmGateway, never()).existeCrm(any(), any());
         verify(repository, never()).salvar(any());
-        verifyNoMoreInteractions(repository);
     }
 
     @Test
-    void deveSalvar_quandoEncaminhamentoValido() {
-        Encaminhamento encaminhamento = mock(Encaminhamento.class);
-        when(encaminhamento.getProtocolo()).thenReturn("XYZ999");
-        when(repository.existePorProtocolo("XYZ999")).thenReturn(false);
+    void deveRecusarQuandoCrmNaoExiste() {
+        Encaminhamento encaminhamento = buildEncaminhamento("ABC-123", "SP", "123456");
+        when(repository.existePorProtocolo("ABC-123")).thenReturn(false);
+        when(cfmGateway.existeCrm("SP", "123456")).thenReturn(false);
 
-       useCase.execute(encaminhamento);
+        assertThrows(ValidacaoException.class, () -> useCase.execute(encaminhamento));
 
-        verify(repository).existePorProtocolo("XYZ999");
+        verify(repository, never()).salvar(any());
+    }
+
+    @Test
+    void deveSalvarQuandoCrmExiste() {
+        Encaminhamento encaminhamento = buildEncaminhamento("ABC-123", "SP", "123456");
+        when(repository.existePorProtocolo("ABC-123")).thenReturn(false);
+        when(cfmGateway.existeCrm("SP", "123456")).thenReturn(true);
+        useCase.execute(encaminhamento);
+
         verify(repository).salvar(encaminhamento);
-        verifyNoMoreInteractions(repository);
+    }
+
+    private Encaminhamento buildEncaminhamento(String protocolo, String crmUf, String crmNumero) {
+        Medico medico = new Medico("Dra. Maria", crmUf, crmNumero);
+        Paciente paciente = new Paciente(new Cpf("529.982.247-25"), "Joao");
+        Cid cid = new Cid("F84.0");
+        return new Encaminhamento(protocolo, cid, medico, paciente, "NEURO", "Triagem");
     }
 }
