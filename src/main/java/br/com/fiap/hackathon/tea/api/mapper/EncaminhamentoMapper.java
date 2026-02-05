@@ -15,6 +15,7 @@ public interface EncaminhamentoMapper {
 
 
     @Mapping(target = "paciente.cpf", source = "paciente.cpf", qualifiedByName = "cpfPaciente")
+    @Mapping(target = "cid.codigo", source = "cid")
     Encaminhamento toDomain(EncaminhamentoRequest request);
 
     @Named("cpfPaciente")

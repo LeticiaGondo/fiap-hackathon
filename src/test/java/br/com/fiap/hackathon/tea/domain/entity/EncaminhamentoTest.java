@@ -1,12 +1,10 @@
 package br.com.fiap.hackathon.tea.domain.entity;
 
-import br.com.fiap.hackathon.tea.domain.Cpf;
-import br.com.fiap.hackathon.tea.domain.Encaminhamento;
-import br.com.fiap.hackathon.tea.domain.Medico;
-import br.com.fiap.hackathon.tea.domain.Paciente;
+import br.com.fiap.hackathon.tea.domain.*;
 import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.Test;
 
+import static br.com.fiap.hackathon.tea.domain.Encaminhamento.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EncaminhamentoTest {
@@ -14,64 +12,65 @@ class EncaminhamentoTest {
 
     @Test
     void deveCriarEncaminhamento_quandoDadosForemValidos() {
-        Encaminhamento encaminhamento = new Encaminhamento("protocolo", "cid", getMedico(), getPaciente());
+        Encaminhamento encaminhamento = new Encaminhamento("protocolo", getCid(), getMedico(), getPaciente(), "especialidade", "motivoSolicitacao");
 
         assertNotNull(encaminhamento);
     }
 
     @Test
-    void deveLancarException_quandoProtocoloEstiverNulo() {
-        ValidacaoException ex = assertThrows(
+    void deveLancarException_quandoCampoObrigatorioForNulo() {
+        ValidacaoException protocoloEx = assertThrows(
                 ValidacaoException.class,
-                () -> new Encaminhamento(null, "cid", getMedico(), getPaciente())
-        );
+                () -> new Encaminhamento(null, getCid(), getMedico(), getPaciente(),"especialidade", "motivoSolicitacao"));
+        assertEquals(ERRO_PROTOCOLO_OBRIGATORIO, protocoloEx.getMessage());
 
-        assertEquals("Protocolo é obrigatório", ex.getMessage());
+        ValidacaoException especialidadeEx = assertThrows(
+                ValidacaoException.class,
+                () -> new Encaminhamento("123", getCid(), getMedico(), getPaciente(), null, "motivoSolicitacao")
+        );
+        assertEquals(ERRO_ESPECIALIDADE_OBRIGATORIO, especialidadeEx.getMessage());
+
+        ValidacaoException motivoEx = assertThrows(
+                ValidacaoException.class,
+                () -> new Encaminhamento("123", getCid(), getMedico(), getPaciente(), "especialidade", null)
+        );
+        assertEquals(ERRO_MOTIVO_SOLICITACAO_OBRIGATORIO, motivoEx.getMessage());
+
+        ValidacaoException medicoEx = assertThrows(
+                ValidacaoException.class,
+                () -> new Encaminhamento("123", getCid(), null, getPaciente(), "especialidade", null)
+        );
+        assertEquals(ERRO_MEDICO_OBRIGATORIO, medicoEx.getMessage());
+
+        ValidacaoException pacienteEx = assertThrows(
+                ValidacaoException.class,
+                () -> new Encaminhamento("123", getCid(), getMedico(), null, "especialidade", null)
+        );
+        assertEquals(ERRO_PACIENTE_OBRIGATORIO, pacienteEx.getMessage());
+
     }
 
     @Test
-    void deveLancarException_quandoProtocoloForVazio() {
-        ValidacaoException ex1 = assertThrows(
+    void deveLancarException_quandoCampoObrigatorioForVazio() {
+        ValidacaoException protocoloEx = assertThrows(
                 ValidacaoException.class,
-                () -> new Encaminhamento("", "cid", getMedico(), getPaciente())
-        );
+                () -> new Encaminhamento("", getCid(), getMedico(), getPaciente(),"especialidade", "motivoSolicitacao"));
+        assertEquals(ERRO_PROTOCOLO_OBRIGATORIO, protocoloEx.getMessage());
 
-        assertEquals("Protocolo é obrigatório", ex1.getMessage());
 
-        ValidacaoException ex2 = assertThrows(
+        ValidacaoException especialidadeEx = assertThrows(
                 ValidacaoException.class,
-                () -> new Encaminhamento("  ", "cid", getMedico(), getPaciente())
+                () -> new Encaminhamento("123", getCid(), getMedico(), getPaciente(), "   ", "motivoSolicitacao")
         );
+        assertEquals(ERRO_ESPECIALIDADE_OBRIGATORIO, especialidadeEx.getMessage());
 
-        assertEquals("Protocolo é obrigatório", ex2.getMessage());
+        ValidacaoException motivoEx = assertThrows(
+                ValidacaoException.class,
+                () -> new Encaminhamento("123", getCid(), getMedico(), getPaciente(), "especialidade", "    ")
+        );
+        assertEquals(ERRO_MOTIVO_SOLICITACAO_OBRIGATORIO, motivoEx.getMessage());
     }
 
-    @Test
-    void deveLancarException_quandoCidEstiverNulo() {
-        ValidacaoException ex = assertThrows(
-                ValidacaoException.class,
-                () -> new Encaminhamento("123", null, getMedico(), getPaciente())
-        );
-
-        assertEquals("CID é obrigatório", ex.getMessage());
-    }
-
-    @Test
-    void deveLancarException_quandoCidForVazio() {
-        ValidacaoException ex1 = assertThrows(
-                ValidacaoException.class,
-                () -> new Encaminhamento("123", "", getMedico(), getPaciente())
-        );
-
-        assertEquals("CID é obrigatório", ex1.getMessage());
-
-        ValidacaoException ex2 = assertThrows(
-                ValidacaoException.class,
-                () -> new Encaminhamento("123", " ", getMedico(), getPaciente())
-        );
-
-        assertEquals("CID é obrigatório", ex2.getMessage());
-    }
 
 
     private Medico getMedico(){
@@ -80,5 +79,8 @@ class EncaminhamentoTest {
 
     private Paciente getPaciente(){
         return new Paciente(new Cpf("52998224725"), "Maria");
+    }
+    private Cid getCid(){
+        return new Cid("F84.0");
     }
 }

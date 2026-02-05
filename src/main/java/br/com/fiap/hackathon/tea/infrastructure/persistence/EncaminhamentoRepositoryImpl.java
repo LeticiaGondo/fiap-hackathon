@@ -25,11 +25,9 @@ public class EncaminhamentoRepositoryImpl implements EncaminhamentoRepository {
         EncaminhamentoEntity entity = new EncaminhamentoEntity();
 
         entity.setProtocolo(encaminhamento.getProtocolo());
-        entity.setCid(encaminhamento.getCid());
+        entity.setCid(encaminhamento.getCid().getCodigo());
 
-        // sistêmico: data atual
         entity.setDataEncaminhamento(LocalDate.now());
-
 
         Medico medico = encaminhamento.getMedico();
         if (medico != null) {
@@ -43,8 +41,8 @@ public class EncaminhamentoRepositoryImpl implements EncaminhamentoRepository {
             entity.setPacienteCpf(paciente.getCpf().getNumero());
         }
 
-        entity.setEspecialidade("NAO_INFORMADA");
-        entity.setMotivoSolicitacao("NAO_INFORMADO");
+        entity.setEspecialidade(encaminhamento.getEspecialidade());
+        entity.setMotivoSolicitacao(encaminhamento.getMotivoSolicitacao());
 
         jpaRepository.save(entity);
     }

@@ -4,7 +4,9 @@ public record EncaminhamentoRequest(
         String protocolo,
         String cid,
         MedicoRequest medico,
-        PacienteRequest paciente
+        PacienteRequest paciente,
+        String especialidade,
+        String motivoSolicitacao
 ) {
     public record MedicoRequest(String nome, String crmUf, String crmNumero) {}
     public record PacienteRequest(String cpf, String nome) {}}
