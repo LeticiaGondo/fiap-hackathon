@@ -11,11 +11,6 @@ import org.springframework.util.StringUtils;
 @Service
 public class AgendarEncaminhamentoUseCase {
 
-    public static final String ERRO_NAO_VALIDADO =
-            "Encaminhamento precisa passar pelo processo de validacao";
-    public static final String ERRO_ESPECIALIDADE_OBRIGATORIA =
-            "Especialidade não informada para o protocolo";
-
     private final EncaminhamentoRepository encaminhamentoRepository;
     private final AgendamentoGateway agendamentoGateway;
 
@@ -35,9 +30,6 @@ public class AgendarEncaminhamentoUseCase {
         }
 
         String especialidade = encaminhamentoRepository.buscaEspecialidaePorProtocolo(protocolo);
-        if (!StringUtils.hasText(especialidade)) {
-            throw new ValidacaoException(ERRO_ESPECIALIDADE_OBRIGATORIA + " " + protocolo);
-        }
 
         return agendamentoGateway.agendar(protocolo, especialidade);
     }

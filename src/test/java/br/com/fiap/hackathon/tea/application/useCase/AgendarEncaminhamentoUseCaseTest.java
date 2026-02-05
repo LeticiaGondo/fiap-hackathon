@@ -5,7 +5,6 @@ import br.com.fiap.hackathon.tea.application.model.AgendamentoResponse;
 import br.com.fiap.hackathon.tea.application.model.UnidadeAgendamento;
 import br.com.fiap.hackathon.tea.application.port.AgendamentoGateway;
 import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
-import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -29,20 +28,6 @@ class AgendarEncaminhamentoUseCaseTest {
         assertThatThrownBy(() -> useCase.execute("PROTO-1"))
                 .isInstanceOf(EncaminhamentoNaoEncontradoException.class)
                 .hasMessageContaining("PROTO-1");
-    }
-
-    @Test
-    void deveRetornarErroQuandoEspecialidadeNaoInformada() {
-        EncaminhamentoRepository repository = mock(EncaminhamentoRepository.class);
-        AgendamentoGateway gateway = mock(AgendamentoGateway.class);
-        AgendarEncaminhamentoUseCase useCase = new AgendarEncaminhamentoUseCase(repository, gateway);
-
-        when(repository.existePorProtocolo("PROTO-2")).thenReturn(true);
-        when(repository.buscaEspecialidaePorProtocolo("PROTO-2")).thenReturn(" ");
-
-        assertThatThrownBy(() -> useCase.execute("PROTO-2"))
-                .isInstanceOf(ValidacaoException.class)
-                .hasMessageContaining("Especialidade não informada");
     }
 
     @Test
