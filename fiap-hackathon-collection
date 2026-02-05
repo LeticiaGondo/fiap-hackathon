@@ -38,7 +38,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"{{protocolo}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"{{protocolo}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -79,7 +79,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"{{protocolo}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"{{protocolo}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -120,7 +120,89 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - especialidade ausente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de especialidade obrigatória', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('Especialidade é obrigatório');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-ESP-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - motivo da solicitação ausente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de motivo obrigatório', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('Motivo da solicitação é obrigatório');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-MOT-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -161,7 +243,89 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CID-1\",\n  \"cid\": \"\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-CID-1\",\n  \"cid\": \"\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - CID fora TEA",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de CID TEA', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('CID informado não corresponde a um diagnóstico de TEA');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-CID-2\",\n  \"cid\": \"A00.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - médico ausente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de médico obrigatório', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('Dados do medico(a) é obrigatório');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-MED-0\",\n  \"cid\": \"F84.0\",\n  \"medico\": null,\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -186,7 +350,7 @@
               "pm.test('Status 400', () => pm.response.to.have.status(400));",
               "pm.test('Mensagem de médico obrigatório', () => {",
               "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Nome do médico é obrigatório');",
+              "  pm.expect(body.mensagem).to.eql('Nome do medico(a) é obrigatório');",
               "});"
             ]
           }
@@ -202,7 +366,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-MED-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -243,7 +407,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-2\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-MED-2\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -284,7 +448,48 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-3\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-MED-3\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - paciente ausente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de paciente obrigatório', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('Dados do paciente é obrigatório');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-PAC-0\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": null,\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -325,7 +530,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-PAC-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -366,7 +571,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-2\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-PAC-2\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
@@ -407,7 +612,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-3\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"11111111111\",\n    \"nome\": \"João da Silva\"\n  }\n}"
+          "raw": "{\n  \"protocolo\": \"PROTO-PAC-3\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"11111111111\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/encaminhamento/validacao",
