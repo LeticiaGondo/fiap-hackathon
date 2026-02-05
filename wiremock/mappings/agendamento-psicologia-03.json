@@ -22,7 +22,7 @@
     "jsonBody": {
       "protocolo": "{{jsonPath request.body '$.protocolo'}}",
       "status": "AGENDADO",
-      "dataHora": "2026-02-10T13:00:00",
+      "dataHora": "{{now offset='P0D' format='yyyy-MM-dd'}}T09:30:00",
       "unidade": {
         "id": "UBS-021",
         "nome": "UBS Serra",
