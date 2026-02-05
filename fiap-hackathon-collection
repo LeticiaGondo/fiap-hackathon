@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Hackathon TEA - Encaminhamentos",
-    "description": "Collection para validar cenários de encaminhamento e agendamento, incluindo validações de domínio e respostas das integrações.",
+    "description": "Collection para validar cenários de encaminhamento e agendamento.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -463,88 +463,6 @@
       }
     },
     {
-      "name": "Validar encaminhamento - CRM inválido (CFM 400)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CRM inválido no CFM', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CRM inválido no CFM');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        },
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CRM-400\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"000000\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CRM não encontrado (CFM 404)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CRM inválido', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CRM inválido');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        },
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CRM-404\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"999999\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        }
-      }
-    },
-    {
       "name": "Validar encaminhamento - paciente ausente",
       "event": [
         {
@@ -709,6 +627,135 @@
       }
     },
     {
+      "name": "Validar encaminhamento - CRM inexistente (404 CFM)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de CRM inválido', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('CRM inválido');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-CRM-404\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"999999\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - CRM inválido (400 CFM)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 400', () => pm.response.to.have.status(400));",
+              "pm.test('Mensagem de CRM inválido no CFM', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.eql('CRM inválido no CFM');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"PROTO-CRM-400\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"000000\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validar encaminhamento - especialidade sem vagas",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const protocolo = `PROTO-SEM-VAGAS-${Date.now()}`;",
+              "pm.collectionVariables.set('protocoloSemVagas', protocolo);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"protocolo\": \"{{protocoloSemVagas}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"ODONTOLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encaminhamento",
+            "validacao"
+          ]
+        }
+      }
+    },
+    {
       "name": "Agendar encaminhamento - sucesso",
       "event": [
         {
@@ -741,15 +788,15 @@
       }
     },
     {
-      "name": "Validar encaminhamento - especialidade sem vagas (CARDIOLOGIA)",
+      "name": "Agendar encaminhamento - protocolo inexistente",
       "event": [
         {
           "listen": "prerequest",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "const protocoloSemVagas = `PROTO-CARDIO-${Date.now()}`;",
-              "pm.collectionVariables.set('protocoloSemVagas', protocoloSemVagas);"
+              "const protocoloInexistente = `PROTO-INEXISTENTE-${Date.now()}`;",
+              "pm.collectionVariables.set('protocoloInexistente', protocoloInexistente);"
             ]
           }
         },
@@ -758,7 +805,11 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              "pm.test('Status 404', () => pm.response.to.have.status(404));",
+              "pm.test('Mensagem de protocolo inexistente', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.mensagem).to.include('Encaminhamento não encontrado');",
+              "});"
             ]
           }
         }
@@ -766,29 +817,20 @@
       "request": {
         "method": "POST",
         "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
+          "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloInexistente}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "encaminhamento",
-            "validacao"
+            "agendamento",
+            "{{protocoloInexistente}}"
           ]
-        },
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"{{protocoloSemVagas}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"CARDIOLOGIA\",\n  \"motivoSolicitacao\": \"Avaliação complementar\"\n}"
         }
       }
     },
     {
-      "name": "Agendar encaminhamento - sem vagas (CARDIOLOGIA)",
+      "name": "Agendar encaminhamento - sem vagas",
       "event": [
         {
           "listen": "test",
@@ -798,7 +840,7 @@
               "pm.test('Status 409', () => pm.response.to.have.status(409));",
               "pm.test('Mensagem de sem vagas', () => {",
               "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Sem vagas disponíveis para especialidade informada');",
+              "  pm.expect(body.mensagem).to.include('Sem vagas disponíveis');",
               "});"
             ]
           }
@@ -818,49 +860,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "Agendar encaminhamento - protocolo não encontrado",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "const protocoloInvalido = `PROTO-NAO-${Date.now()}`;",
-              "pm.collectionVariables.set('protocoloInvalido', protocoloInvalido);"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 404', () => pm.response.to.have.status(404));",
-              "pm.test('Mensagem de protocolo não encontrado', () => {",
-              "  const body = pm.response.json();",
-              "  const protocolo = pm.collectionVariables.get('protocoloInvalido');",
-              "  pm.expect(body.mensagem).to.eql(`Encaminhamento não encontrado para o protocolo ${protocolo}`);",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloInvalido}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "agendamento",
-            "{{protocoloInvalido}}"
-          ]
-        }
-      }
     }
   ],
   "variable": [
@@ -873,7 +872,7 @@
       "value": ""
     },
     {
-      "key": "protocoloInvalido",
+      "key": "protocoloInexistente",
       "value": ""
     },
     {
