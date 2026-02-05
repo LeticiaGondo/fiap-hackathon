@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'FONOAUDIOLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-FONOAUDIOLOGIA",
+  "requiredScenarioState": "FONOAUDIOLOGIA-3",
+  "newScenarioState": "FONOAUDIOLOGIA-4",
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "protocolo": "{{jsonPath request.body '$.protocolo'}}",
+      "status": "AGENDADO",
+      "dataHora": "2026-02-10T10:30:00",
+      "unidade": {
+        "id": "UBS-011",
+        "nome": "UBS Oeste",
+        "endereco": "Rua das Palmeiras, 210"
+      }
+    }
+  }
+}

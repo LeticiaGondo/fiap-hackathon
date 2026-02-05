@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'PSICOLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-PSICOLOGIA",
+  "requiredScenarioState": "PSICOLOGIA-4",
+  "newScenarioState": "PSICOLOGIA-FIM",
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "protocolo": "{{jsonPath request.body '$.protocolo'}}",
+      "status": "AGENDADO",
+      "dataHora": "2026-02-11T11:00:00",
+      "unidade": {
+        "id": "UBS-021",
+        "nome": "UBS Serra",
+        "endereco": "Av. Brasil, 1200"
+      }
+    }
+  }
+}

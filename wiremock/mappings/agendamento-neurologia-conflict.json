@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'NEUROLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-NEUROLOGIA",
+  "requiredScenarioState": "NEUROLOGIA-FIM",
+  "response": {
+    "status": 409,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "mensagem": "Sem vagas disponíveis para especialidade NEUROLOGIA"
+    }
+  }
+}

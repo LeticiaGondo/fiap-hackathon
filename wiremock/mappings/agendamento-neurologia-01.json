@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'NEUROLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-NEUROLOGIA",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "NEUROLOGIA-2",
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "protocolo": "{{jsonPath request.body '$.protocolo'}}",
+      "status": "AGENDADO",
+      "dataHora": "2026-02-10T08:00:00",
+      "unidade": {
+        "id": "UBS-001",
+        "nome": "UBS Central",
+        "endereco": "Rua das Flores, 100"
+      }
+    }
+  }
+}

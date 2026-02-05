@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'PSICOLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-PSICOLOGIA",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "PSICOLOGIA-2",
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "protocolo": "{{jsonPath request.body '$.protocolo'}}",
+      "status": "AGENDADO",
+      "dataHora": "2026-02-10T11:00:00",
+      "unidade": {
+        "id": "UBS-020",
+        "nome": "UBS Jardim",
+        "endereco": "Rua das Acacias, 800"
+      }
+    }
+  }
+}

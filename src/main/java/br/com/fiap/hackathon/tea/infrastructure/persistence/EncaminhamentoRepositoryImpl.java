@@ -1,5 +1,6 @@
 package br.com.fiap.hackathon.tea.infrastructure.persistence;
 
+import br.com.fiap.hackathon.tea.application.exception.EncaminhamentoNaoEncontradoException;
 import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
 import br.com.fiap.hackathon.tea.domain.Encaminhamento;
 import br.com.fiap.hackathon.tea.domain.Medico;
@@ -57,7 +58,9 @@ public class EncaminhamentoRepositoryImpl implements EncaminhamentoRepository {
         return jpaRepository.findByProtocolo(protocolo)
                 .map(EncaminhamentoEntity::getEspecialidade)
                 .orElseThrow(() ->
-                        new ValidacaoException("Encaminhamento não encontrado para o protocolo " + protocolo)
+                        new EncaminhamentoNaoEncontradoException(
+                                "Encaminhamento não encontrado para o protocolo " + protocolo
+                        )
                 );
     }
 

@@ -1,0 +1,21 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "doesNotMatch": ".*\\\"especialidade\\\".*"
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "mensagem": "Especialidade é obrigatória"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'FONOAUDIOLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-FONOAUDIOLOGIA",
+  "requiredScenarioState": "FONOAUDIOLOGIA-2",
+  "newScenarioState": "FONOAUDIOLOGIA-3",
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "protocolo": "{{jsonPath request.body '$.protocolo'}}",
+      "status": "AGENDADO",
+      "dataHora": "2026-02-10T09:30:00",
+      "unidade": {
+        "id": "UBS-010",
+        "nome": "UBS Leste",
+        "endereco": "Av. Atlantica, 900"
+      }
+    }
+  }
+}

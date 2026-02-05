@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/agendamentos",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.especialidade == 'NEUROLOGIA')]"
+      }
+    ]
+  },
+  "scenarioName": "AGENDAMENTO-NEUROLOGIA",
+  "requiredScenarioState": "NEUROLOGIA-3",
+  "newScenarioState": "NEUROLOGIA-4",
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "protocolo": "{{jsonPath request.body '$.protocolo'}}",
+      "status": "AGENDADO",
+      "dataHora": "2026-02-10T10:00:00",
+      "unidade": {
+        "id": "UBS-002",
+        "nome": "UBS Norte",
+        "endereco": "Av. do Contorno, 450"
+      }
+    }
+  }
+}

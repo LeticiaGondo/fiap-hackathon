@@ -1,17 +1,20 @@
 package br.com.fiap.hackathon.tea.application.useCase;
 
-
+import br.com.fiap.hackathon.tea.application.exception.EncaminhamentoNaoEncontradoException;
 import br.com.fiap.hackathon.tea.application.model.AgendamentoResponse;
 import br.com.fiap.hackathon.tea.application.port.AgendamentoGateway;
 import br.com.fiap.hackathon.tea.application.port.EncaminhamentoRepository;
 import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class AgendarEncaminhamentoUseCase {
 
     public static final String ERRO_NAO_VALIDADO =
             "Encaminhamento precisa passar pelo processo de validacao";
+    public static final String ERRO_ESPECIALIDADE_OBRIGATORIA =
+            "Especialidade não informada para o protocolo";
 
     private final EncaminhamentoRepository encaminhamentoRepository;
     private final AgendamentoGateway agendamentoGateway;
@@ -26,10 +29,15 @@ public class AgendarEncaminhamentoUseCase {
 
     public AgendamentoResponse execute(String protocolo) {
         if (!encaminhamentoRepository.existePorProtocolo(protocolo)) {
-            throw new ValidacaoException(ERRO_NAO_VALIDADO);
+            throw new EncaminhamentoNaoEncontradoException(
+                    "Encaminhamento não encontrado para o protocolo " + protocolo
+            );
         }
 
         String especialidade = encaminhamentoRepository.buscaEspecialidaePorProtocolo(protocolo);
+        if (!StringUtils.hasText(especialidade)) {
+            throw new ValidacaoException(ERRO_ESPECIALIDADE_OBRIGATORIA + " " + protocolo);
+        }
 
         return agendamentoGateway.agendar(protocolo, especialidade);
     }

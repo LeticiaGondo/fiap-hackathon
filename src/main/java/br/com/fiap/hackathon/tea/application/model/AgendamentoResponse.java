@@ -6,6 +6,6 @@ public record AgendamentoResponse(
         String protocolo,
         String status,
         LocalDateTime dataHora,
-        String unidade,
+        UnidadeAgendamento unidade,
         String especialidade
 ) {}
