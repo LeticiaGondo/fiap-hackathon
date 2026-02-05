@@ -30,6 +30,17 @@ API em Spring Boot para validação e agendamento de encaminhamentos relacionado
 
 A aplicação sobe em **http://localhost:8080**.
 
+### Executar mocks via Docker Compose
+
+```bash
+docker compose up --build
+```
+
+Serviços expostos:
+- WireMock Agendamento: **http://localhost:8081**
+- WireMock CFM: **http://localhost:8089**
+
+
 ## 📚 Documentação e ferramentas
 
 - **Swagger UI:** http://localhost:8080/swagger-ui/index.html
@@ -74,13 +85,49 @@ A aplicação sobe em **http://localhost:8080**.
 {
   "protocolo": "ABC-123",
   "status": "AGENDADO",
-  "dataHora": "2024-10-30T10:30:00",
-  "unidade": "UBS Central",
-  "especialidade": "NAO_INFORMADA"
+ "dataHora": "2026-02-10T10:00:00",
+  "unidade": {
+    "id": "UBS-001",
+    "nome": "UBS Central",
+    "endereco": "Rua das Flores, 100"
+  },
+  "especialidade": "NEUROLOGIA"
 }
 ```
 
-> Caso o protocolo não tenha sido validado previamente, a API retorna erro de validação.
+- `404 Not Found` quando o protocolo não existir.
+- `409 Conflict` quando não houver vagas disponíveis para a especialidade.
+- `400 Bad Request` para requisições inválidas.
+
+### 3) Agendamento mock (WireMock)
+
+`POST http://localhost:8081/api/agendamentos`
+
+**Body (JSON):**
+
+```json
+{
+  "protocolo": "ABC-123",
+  "especialidade": "NEUROLOGIA"
+}
+```
+
+**Resposta (JSON):**
+
+```json
+{
+  "protocolo": "ABC-123",
+  "status": "AGENDADO",
+  "dataHora": "2026-02-10T10:00:00",
+  "unidade": {
+    "id": "UBS-001",
+    "nome": "UBS Central",
+    "endereco": "Rua das Flores, 100"
+  }
+}
+```
+
+> Observação: o WireMock gera `dataHora` dinamicamente sempre para datas futuras, mantendo os horários fixos. As datas exibidas acima são exemplos.
 
 ## 🗄️ Banco de dados
 
@@ -91,6 +138,17 @@ O schema é carregado automaticamente a partir de `schema.sql` e a aplicação u
 ```bash
 ./mvnw test
 ```
+
+## 📦 Seed de vagas do agendamento-mock
+
+As vagas simuladas estão configuradas nos arquivos de mappings do WireMock:
+
+```
+wiremock/mappings/agendamento-*.json
+```
+
+Para alterar ou adicionar vagas, edite os mappings e reinicie o container.
+
 
 ---
 
