@@ -68,5 +68,5 @@ A coleção foi organizada para rodar de cima para baixo. O fluxo recomendado é
 
 ## 📝 Observações
 
-- O WireMock utiliza *scenarios* para simular vagas por especialidade. Em especialidades de baixa disponibilidade, múltiplas execuções podem gerar conflitos (409) naturalmente.
+- O WireMock utiliza *cenarios* para simular vagas por especialidade. Em especialidades de baixa disponibilidade, múltiplas execuções podem gerar conflitos (409) naturalmente.
 - Caso precise resetar o estado do WireMock, reinicie o container com `docker compose restart`.

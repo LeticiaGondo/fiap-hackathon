@@ -12,7 +12,7 @@ services:
     image: wiremock/wiremock:3.5.4
     container_name: wiremock-agendamento
     ports:
-      - "8081:8081"
+      - "8081:8080"
     volumes:
       - ./wiremock:/home/wiremock
     command: [ "--verbose"]
