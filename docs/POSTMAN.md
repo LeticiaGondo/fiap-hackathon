@@ -2,7 +2,7 @@
 
 Este documento descreve como importar e executar a coleção Postman com **todos os cenários** de validação e agendamento do projeto.
 
-## ✅ Pré-requisitos
+## Pré-requisitos
 
 1. **Aplicação Spring Boot** rodando localmente:
    ```bash
@@ -15,13 +15,13 @@ Este documento descreve como importar e executar a coleção Postman com **todos
 
 > Os endpoints de integração devem estar disponíveis em `http://localhost:8081` (Agendamento) e `http://localhost:8089` (CFM).
 
-## 📦 Importar a coleção
+## Importar a coleção
 
 1. Abra o Postman.
 2. Clique em **Import**.
 3. Selecione o arquivo `fiap-hackathon-collection.json` na raiz do repositório.
 
-## 🌐 Variáveis da coleção
+## Variáveis da coleção
 
 A coleção já inclui variáveis configuradas em nível de coleção:
 
@@ -34,7 +34,7 @@ A coleção já inclui variáveis configuradas em nível de coleção:
 
 Se você publicar a API em outra URL, atualize apenas o valor de `baseUrl`.
 
-## 🧪 Cenários contemplados
+## Cenários contemplados
 
 ### 1) Validação de encaminhamento
 
@@ -52,7 +52,17 @@ Se você publicar a API em outra URL, atualize apenas o valor de `baseUrl`.
 - ❌ Protocolo inexistente (404)
 - ❌ Sem vagas disponíveis (409)
 
-## ▶️ Ordem recomendada para execução
+## Especialidades disponíveis e vagas
+
+O WireMock do agendamento simula **4 vagas por especialidade**. As especialidades aceitas são:
+
+- **NEUROLOGIA** (4 vagas)
+- **PSICOLOGIA** (4 vagas)
+- **FONOAUDIOLOGIA** (4 vagas)
+
+Após consumir as 4 vagas de uma especialidade, o mock passa a responder **409** para novas tentativas.
+
+## Ordem recomendada para execução
 
 A coleção foi organizada para rodar de cima para baixo. O fluxo recomendado é:
 
