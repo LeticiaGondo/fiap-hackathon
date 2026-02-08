@@ -20,6 +20,18 @@ class CidTest {
     }
 
     @Test
+    void deveRetornarPendenciaQuandoCidNaoInformadoSemNpe() {
+        Cid cidNulo = Cid.of(null);
+        Cid cidVazio = Cid.of("   ");
+
+        assertNotNull(cidNulo);
+        assertNotNull(cidVazio);
+        assertTrue(cidNulo.validarPendencias().contains(Cid.ERRO_CID_OBRIGATORIO));
+        assertTrue(cidVazio.validarPendencias().contains(Cid.ERRO_CID_OBRIGATORIO));
+    }
+
+
+    @Test
     void deveCriarCidUppercaseQuandoInformado() {
         Cid cid = Cid.of("f84.0");
 

@@ -18,8 +18,8 @@ public class Cid {
     }
 
     public static Cid of(String codigo) {
-        if (codigo == null || codigo.isBlank()) {
-            return null;
+        if (codigo == null) {
+            return new Cid(null);
         }
         return new Cid(codigo.toUpperCase());
     }
@@ -31,6 +31,11 @@ public class Cid {
 
     public List<String> validarPendencias() {
         List<String> pendencias = new ArrayList<>();
+
+        if (codigo == null || codigo.isBlank()) {
+            pendencias.add(ERRO_CID_OBRIGATORIO);
+            return pendencias;
+        }
 
         if (!ehCidTea(codigo)) {
             pendencias.add(ERRO_CID_TEA);
