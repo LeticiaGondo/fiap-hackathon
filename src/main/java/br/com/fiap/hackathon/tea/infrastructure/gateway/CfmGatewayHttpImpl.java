@@ -76,7 +76,7 @@ public class CfmGatewayHttpImpl implements CfmGateway {
                 return false;
             }
             if (status == HttpStatus.BAD_REQUEST) {
-                throw new ValidacaoException(extractMensagem(ex.getResponseBodyAsString()));
+               return false;
             }
             if (status == HttpStatus.UNAUTHORIZED || status == HttpStatus.FORBIDDEN) {
                 throw new IntegrationException(FALHA_AUTENTICACAO);
