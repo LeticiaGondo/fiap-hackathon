@@ -62,6 +62,8 @@ Serviços expostos:
 {
   "protocolo": "ABC-123",
   "cid": "F84.0",
+  "especialidade": "NEUROLOGIA",
+  "motivoSolicitacao": "Avaliação clínica para continuidade do cuidado",
   "medico": {
     "nome": "Dra. Maria Silva",
     "crmUf": "SP",
@@ -75,6 +77,33 @@ Serviços expostos:
 ```
 
 **Resposta:** `200 OK` (sem body) quando válido.
+
+**Cenários inválidos (exemplos):**
+
+- `400 Bad Request` quando houver pendências de validação de negócio (campos obrigatórios, CPF inválido, CID fora da família TEA, CRM inválido/inexistente etc.).
+
+**Exemplo de resposta `400` (pendências):**
+
+```json
+{
+  "pendencias": [
+    "Especialidade obrigatória",
+    "Motivo da solicitação obrigatório",
+    "CPF inválido"
+  ]
+}
+```
+
+- `502 Bad Gateway` quando ocorrer erro de integração ao consultar serviço externo.
+
+**Exemplo de resposta `502`:**
+
+```json
+{
+  "mensagem": "Erro ao consultar serviço externo"
+}
+```
+
 
 ### 2) Agendar encaminhamento
 
@@ -100,33 +129,6 @@ Serviços expostos:
 - `409 Conflict` quando não houver vagas disponíveis para a especialidade.
 - `400 Bad Request` para requisições inválidas.
 
-### 3) Agendamento mock (WireMock)
-
-`POST http://localhost:8081/api/agendamentos`
-
-**Body (JSON):**
-
-```json
-{
-  "protocolo": "ABC-123",
-  "especialidade": "NEUROLOGIA"
-}
-```
-
-**Resposta (JSON):**
-
-```json
-{
-  "protocolo": "ABC-123",
-  "status": "AGENDADO",
-  "dataHora": "2026-02-10T10:00:00",
-  "unidade": {
-    "id": "UBS-001",
-    "nome": "UBS Central",
-    "endereco": "Rua das Flores, 100"
-  }
-}
-```
 
 > Observação: o WireMock gera `dataHora` dinamicamente sempre para datas futuras, mantendo os horários fixos. As datas exibidas acima são exemplos.
 
