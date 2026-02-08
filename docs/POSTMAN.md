@@ -1,82 +1,129 @@
 # Coleção Postman - Hackathon TEA API
 
-Este documento descreve como importar e executar a coleção Postman com **todos os cenários** de validação e agendamento do projeto.
+Este guia foi preparado para apoiar a **entrega acadêmica da pós-graduação**, com um roteiro completo de execução e evidências de teste da API.
 
-## Pré-requisitos
+A coleção cobre os fluxos de:
 
-1. **Aplicação Spring Boot** rodando localmente:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-2. **Mocks WireMock** rodando via Docker Compose:
-   ```bash
-   docker compose up --build
-   ```
+- validação de encaminhamento;
+- agendamento de encaminhamento;
+- cenários positivos e negativos com validação de payload e regras de negócio.
 
-> Os endpoints de integração devem estar disponíveis em `http://localhost:8081` (Agendamento) e `http://localhost:8089` (CFM).
+## 1) Arquivo da coleção
 
-## Importar a coleção
+- **Arquivo principal:** `fiap-hackathon-collection.json`
+- **Formato:** Postman Collection v2.1
+
+---
+
+## 2) Pré-requisitos
+
+1. Subir a API Spring Boot:
+
+```bash
+./mvnw spring-boot:run
+```
+
+2. Subir os mocks de integração (WireMock):
+
+```bash
+docker compose up --build
+```
+
+Serviços esperados:
+
+- API principal: `http://localhost:8080`
+- WireMock Agendamento: `http://localhost:8081`
+- WireMock CFM: `http://localhost:8089`
+
+---
+
+## 3) Como importar no Postman
 
 1. Abra o Postman.
 2. Clique em **Import**.
 3. Selecione o arquivo `fiap-hackathon-collection.json` na raiz do repositório.
+4. Execute a coleção pelo **Collection Runner** na ordem indicada neste documento.
 
-## Variáveis da coleção
+---
 
-A coleção já inclui variáveis configuradas em nível de coleção:
+## 4) Variáveis da coleção
 
-| Variável | Descrição | Valor padrão |
-| --- | --- | --- |
+| Variável | Finalidade | Exemplo |
+|---|---|---|
 | `baseUrl` | URL base da API | `http://localhost:8080` |
-| `protocolo` | Protocolo criado nos cenários de sucesso | gerado automaticamente |
-| `protocoloSemVagas` | Protocolo para simular falta de vagas | gerado automaticamente |
-| `protocoloInexistente` | Protocolo inexistente para validar 404 | gerado automaticamente |
+| `protocoloAtual` | Protocolo transitório para requests de validação | gerado em runtime |
+| `protocoloSucesso` | Protocolo criado no cenário de validação com sucesso | gerado em runtime |
+| `protocoloAgendamentoSucesso` | Protocolo preparado para agendamento bem-sucedido | gerado em runtime |
+| `protocoloInexistente` | Protocolo inexistente para testar `404` | gerado em runtime |
+| `protocoloSemVagas` | Protocolo para cenário de indisponibilidade (`409`) | gerado em runtime |
 
-Se você publicar a API em outra URL, atualize apenas o valor de `baseUrl`.
+---
 
-## Cenários contemplados
+## 5) Estratégia de testes da coleção
 
-### 1) Validação de encaminhamento
+A coleção foi estruturada em **2 pastas**:
 
-- ✅ Sucesso (protocolo dinâmico)
-- ❌ Protocolo duplicado
-- ❌ Campos obrigatórios (protocolo, especialidade, motivo, CID, médico, paciente)
-- ❌ CPF ausente / inválido
-- ❌ CID fora da família TEA
-- ❌ CRM inválido (retorno 404 do CFM)
-- ❌ CRM inválido (retorno 400 do CFM)
+1. **Validação de Encaminhamento**
+2. **Agendamento de Encaminhamento**
 
-### 2) Agendamento de encaminhamento
+Cada request já contém scripts em **Tests** com validações automáticas de:
 
-- ✅ Sucesso
-- ❌ Protocolo inexistente (404)
-- ❌ Sem vagas disponíveis (409)
+- status HTTP esperado;
+- presença e conteúdo das mensagens de erro;
+- validação de campos de resposta em cenários de sucesso.
 
-## Especialidades disponíveis e vagas
+---
 
-O WireMock do agendamento simula **4 vagas por especialidade**. As especialidades aceitas são:
+## 6) Matriz de cobertura de casos
 
-- **NEUROLOGIA** (4 vagas)
-- **PSICOLOGIA** (4 vagas)
-- **FONOAUDIOLOGIA** (4 vagas)
+### 6.1 Validação de encaminhamento
 
-Após consumir as 4 vagas de uma especialidade, o mock passa a responder **409** para novas tentativas.
+| ID | Cenário | Resultado esperado                                |
+|---|---|---------------------------------------------------|
+| 01 | Validação com payload válido | `200 OK`                                          |
+| 02 | Protocolo duplicado | `400` + `pendencias`            |
+| 03 | Protocolo ausente | `400` + `pendencias`  |
+| 04 | Especialidade ausente | `400` + `pendencias`                              |
+| 05 | Motivo da solicitação ausente | `400` + `pendencias`                              |
+| 06 | CID ausente | `400` + `pendencias`                              |
+| 07 | CID fora da família TEA | `400` + `pendencias`                              |
+| 08 | Médico ausente | `400` + `pendencias`                              |
+| 09 | Nome do médico ausente | `400` + `pendencias`                              |
+| 10 | UF do CRM ausente | `400` + `pendencias`                              |
+| 11 | Número do CRM ausente | `400` + `pendencias`                              |
+| 12 | Paciente ausente | `400` + `pendencias`                              |
+| 13 | Nome do paciente ausente | `400` + `pendencias`                              |
+| 14 | CPF ausente | `400` + `pendencias`                              |
+| 15 | CPF inválido | `400` + `pendencias`                              |
+| 16 | CRM inexistente no CFM (`404` externo) | `400` + `pendencias`                              |
+| 17 | CRM inválido no CFM (`400` externo) | `400` + `pendencias`                              |
+| 18 | Múltiplas pendências em um único payload | `400` + array com múltiplos itens                 |
 
-## Ordem recomendada para execução
+### 6.2 Agendamento
 
-A coleção foi organizada para rodar de cima para baixo. O fluxo recomendado é:
+| ID | Cenário | Resultado esperado |
+|---|---|---|
+| 19 | Preparar protocolo válido para agendamento | `200 OK` |
+| 20 | Agendamento com sucesso | `200 OK` + corpo com protocolo e especialidade |
+| 21 | Protocolo inexistente | `404 Not Found` |
+| 22 | Preparar protocolo para cenário sem vagas | `200 OK` |
+| 23 | Agendamento sem vagas | `409 Conflict` |
 
-1. **Validar encaminhamento - sucesso** (gera `{{protocolo}}`)
-2. **Validar encaminhamento - protocolo duplicado**
-3. Demais validações com erro
-4. **Validar encaminhamento - especialidade sem vagas** (gera `{{protocoloSemVagas}}`)
-5. **Agendar encaminhamento - sucesso**
-6. **Agendar encaminhamento - protocolo inexistente**
-7. **Agendar encaminhamento - sem vagas**
+---
 
-> Todos os requests possuem testes automáticos (`Tests`) verificando status HTTP e mensagens esperadas.
+## 7) Ordem recomendada de execução
 
-## 📝 Observações
+Execute a coleção em ordem crescente (01 → 23), pois alguns cenários dependem de variáveis geradas em requests anteriores.
 
-- O WireMock utiliza *cenarios* para simular vagas por especialidade. Em especialidades de baixa disponibilidade, múltiplas execuções podem gerar conflitos (409) naturalmente.
-- Caso precise resetar o estado do WireMock, reinicie o container com `docker compose restart`.
+---
+
+## 8) Troubleshooting
+
+- Se todos os requests falharem com conexão: verifique se a API está em `localhost:8080`.
+- Se houver falha em CRM: confirme WireMock CFM em `localhost:8089`.
+- Se houver falha em agendamento: confirme WireMock Agendamento em `localhost:8081`.
+- Para reiniciar os cenários de vagas do WireMock:
+
+```bash
+docker compose restart
+```

@@ -48,7 +48,7 @@ Serviços expostos:
   - JDBC URL: `jdbc:h2:mem:validacao`
   - User: `sa`
   - Password: *(vazio)*
--  **Coleção Postman:** veja [docs/POSTMAN.md](docs/POSTMAN.md) para importar e executar todos os cenários de teste.
+-   **Coleção Postman:** importe o arquivo `fiap-hackathon-collection.json` e veja o guia em [docs/POSTMAN.md](docs/POSTMAN.md) para executar todos os cenários de teste.
 
 ## 🔗 Endpoints principais
 

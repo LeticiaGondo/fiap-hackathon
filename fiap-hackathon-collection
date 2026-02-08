@@ -1,865 +1,1079 @@
 {
   "info": {
-    "name": "Hackathon TEA - Encaminhamentos",
-    "description": "Collection para validar cenários de encaminhamento e agendamento.",
+    "name": "Hackathon TEA - Encaminhamentos (Casos Completos)",
+    "description": "Coleção Postman para testes funcionais completos da API de encaminhamentos TEA, cobrindo validação e agendamento com cenários de sucesso e erro.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Validar encaminhamento - sucesso",
-      "event": [
+      "name": "1. Validação de Encaminhamento",
+      "item": [
         {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "const protocolo = `PROTO-${Date.now()}`;",
-              "pm.collectionVariables.set('protocolo', protocolo);"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 200', () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"{{protocolo}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
+          "name": "01 - Validar encaminhamento (sucesso)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const protocolo = `PROTO-SUCESSO-${Date.now()}`;",
+                  "pm.collectionVariables.set('protocoloAtual', protocolo);",
+                  "pm.collectionVariables.set('protocoloSucesso', protocolo);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
           ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "02 - Validar encaminhamento (protocolo duplicado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém erro de protocolo duplicado', () => pm.expect(body.pendencias.join(' | ')).to.include('já existe'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "03 - Validar encaminhamento (protocolo ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-3-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Protocolo é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "04 - Validar encaminhamento (especialidade ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-4-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Especialidade é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "05 - Validar encaminhamento (motivo ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-5-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Motivo da solicitação é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "06 - Validar encaminhamento (CID ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-6-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('CID é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "07 - Validar encaminhamento (CID fora do TEA)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-7-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('CID informado não corresponde a um diagnóstico de TEA'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"A00.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "08 - Validar encaminhamento (médico ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-8-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Dados do medico(a) é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": null,\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "09 - Validar encaminhamento (nome do médico ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-9-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Nome do medico(a) é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "10 - Validar encaminhamento (UF do CRM ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-10-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('UF do CRM é obrigatória'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "11 - Validar encaminhamento (número do CRM ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-11-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Número do CRM é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "12 - Validar encaminhamento (paciente ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-12-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Dados do paciente é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": null,\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "13 - Validar encaminhamento (nome do paciente ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-13-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Nome do paciente é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "14 - Validar encaminhamento (CPF ausente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-14-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('CPF do paciente é obrigatório'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "15 - Validar encaminhamento (CPF inválido)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-15-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('Cpf do paciente é inválido'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"11111111111\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "16 - Validar encaminhamento (CRM inexistente no CFM)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-16-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('CRM inválido'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"999999\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "17 - Validar encaminhamento (CRM inválido no CFM)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloAtual', `PROTO-17-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna mensagem', () => pm.expect(body.mensagem).to.eql('CRM inválido no CFM'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"000000\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "18 - Validar encaminhamento (múltiplas pendências)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('Retorna várias pendências', () => pm.expect(body.pendencias.length).to.be.greaterThan(2));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"\",\n  \"cid\": \"\",\n  \"medico\": {\n    \"nome\": \"\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Validar encaminhamento - protocolo duplicado",
-      "event": [
+      "name": "2. Agendamento de Encaminhamento",
+      "item": [
         {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de protocolo duplicado', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.include('já existe');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"{{protocolo}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
+          "name": "19 - Preparar protocolo para agendamento com sucesso",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const protocolo = `PROTO-AG-${Date.now()}`;",
+                  "pm.collectionVariables.set('protocoloAtual', protocolo);",
+                  "pm.collectionVariables.set('protocoloAgendamentoSucesso', protocolo);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
           ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - protocolo ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de protocolo obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Protocolo é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - especialidade ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de especialidade obrigatória', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Especialidade é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-ESP-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - motivo da solicitação ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de motivo obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Motivo da solicitação é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MOT-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CID ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CID obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CID é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CID-1\",\n  \"cid\": \"\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CID fora TEA",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CID TEA', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CID informado não corresponde a um diagnóstico de TEA');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CID-2\",\n  \"cid\": \"A00.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - médico ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de médico obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Dados do medico(a) é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-0\",\n  \"cid\": \"F84.0\",\n  \"medico\": null,\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - médico sem nome",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de médico obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Nome do medico(a) é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CRM UF ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CRM UF obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('UF do CRM é obrigatória');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-2\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CRM número ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CRM número obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Número do CRM é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-MED-3\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - paciente ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de paciente obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Dados do paciente é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-0\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": null,\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - paciente sem nome",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de paciente obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Nome do paciente é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-1\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CPF ausente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CPF obrigatório', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CPF do paciente é obrigatório');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-2\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CPF inválido",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CPF inválido', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('Cpf do paciente é inválido');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-PAC-3\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"11111111111\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CRM inexistente (404 CFM)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CRM inválido', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CRM inválido');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CRM-404\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"999999\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - CRM inválido (400 CFM)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "pm.test('Mensagem de CRM inválido no CFM', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.eql('CRM inválido no CFM');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"PROTO-CRM-400\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"000000\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"NEUROLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Validar encaminhamento - especialidade sem vagas",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "const protocolo = `PROTO-SEM-VAGAS-${Date.now()}`;",
-              "pm.collectionVariables.set('protocoloSemVagas', protocolo);"
-            ]
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"PSICOLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
           }
         },
         {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 200', () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"protocolo\": \"{{protocoloSemVagas}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"ODONTOLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/validacao",
-          "host": [
-            "{{baseUrl}}"
+          "name": "20 - Agendar encaminhamento (sucesso)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('Protocolo retornado confere', () => pm.expect(body.protocolo).to.eql(pm.collectionVariables.get('protocoloAgendamentoSucesso')));",
+                  "pm.test('Possui especialidade', () => pm.expect(body.especialidade).to.be.a('string').and.not.empty);"
+                ]
+              }
+            }
           ],
-          "path": [
-            "encaminhamento",
-            "validacao"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Agendar encaminhamento - sucesso",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 200', () => pm.response.to.have.status(200));",
-              "pm.test('Protocolo retornado', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.protocolo).to.eql(pm.collectionVariables.get('protocolo'));",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocolo}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "agendamento",
-            "{{protocolo}}"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Agendar encaminhamento - protocolo inexistente",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "const protocoloInexistente = `PROTO-INEXISTENTE-${Date.now()}`;",
-              "pm.collectionVariables.set('protocoloInexistente', protocoloInexistente);"
-            ]
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloAgendamentoSucesso}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "agendamento",
+                "{{protocoloAgendamentoSucesso}}"
+              ]
+            }
           }
         },
         {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 404', () => pm.response.to.have.status(404));",
-              "pm.test('Mensagem de protocolo inexistente', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.include('Encaminhamento não encontrado');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloInexistente}}",
-          "host": [
-            "{{baseUrl}}"
+          "name": "21 - Agendar encaminhamento (protocolo inexistente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('protocoloInexistente', `PROTO-NAO-EXISTE-${Date.now()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                  "const body = pm.response.json();",
+                  "pm.test('Mensagem de não encontrado', () => pm.expect(body.mensagem).to.include('Encaminhamento não encontrado'));"
+                ]
+              }
+            }
           ],
-          "path": [
-            "encaminhamento",
-            "agendamento",
-            "{{protocoloInexistente}}"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Agendar encaminhamento - sem vagas",
-      "event": [
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloInexistente}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "agendamento",
+                "{{protocoloInexistente}}"
+              ]
+            }
+          }
+        },
         {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 409', () => pm.response.to.have.status(409));",
-              "pm.test('Mensagem de sem vagas', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.mensagem).to.include('Sem vagas disponíveis');",
-              "});"
-            ]
+          "name": "22 - Preparar protocolo para cenário sem vagas",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const protocolo = `PROTO-SEM-VAGAS-${Date.now()}`;",
+                  "pm.collectionVariables.set('protocoloAtual', protocolo);",
+                  "pm.collectionVariables.set('protocoloSemVagas', protocolo);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"protocolo\": \"{{protocoloAtual}}\",\n  \"cid\": \"F84.0\",\n  \"medico\": {\n    \"nome\": \"Dra. Ana Souza\",\n    \"crmUf\": \"SP\",\n    \"crmNumero\": \"123456\"\n  },\n  \"paciente\": {\n    \"cpf\": \"39053344705\",\n    \"nome\": \"João da Silva\"\n  },\n  \"especialidade\": \"ODONTOLOGIA\",\n  \"motivoSolicitacao\": \"Acompanhamento clínico\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/validacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "validacao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "23 - Agendar encaminhamento (sem vagas)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                  "const body = pm.response.json();",
+                  "pm.test('Mensagem de sem vagas', () => pm.expect(body.mensagem).to.include('Sem vagas disponíveis'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloSemVagas}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encaminhamento",
+                "agendamento",
+                "{{protocoloSemVagas}}"
+              ]
+            }
           }
         }
-      ],
-      "request": {
-        "method": "POST",
-        "url": {
-          "raw": "{{baseUrl}}/encaminhamento/agendamento/{{protocoloSemVagas}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "encaminhamento",
-            "agendamento",
-            "{{protocoloSemVagas}}"
-          ]
-        }
-      }
+      ]
     }
   ],
   "variable": [
@@ -868,7 +1082,15 @@
       "value": "http://localhost:8080"
     },
     {
-      "key": "protocolo",
+      "key": "protocoloAtual",
+      "value": ""
+    },
+    {
+      "key": "protocoloSucesso",
+      "value": ""
+    },
+    {
+      "key": "protocoloAgendamentoSucesso",
       "value": ""
     },
     {
