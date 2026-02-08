@@ -801,7 +801,8 @@
                 "exec": [
                   "pm.test('Status 400', () => pm.response.to.have.status(400));",
                   "const body = pm.response.json();",
-                  "pm.test('Retorna mensagem', () => pm.expect(body.mensagem).to.eql('CRM inválido no CFM'));"
+                  "pm.test('Retorna pendências', () => pm.expect(body.pendencias).to.be.an('array'));",
+                  "pm.test('Contém mensagem esperada', () => pm.expect(body.pendencias).to.include('CRM inválido'));"
                 ]
               }
             }
