@@ -1,7 +1,5 @@
 package br.com.fiap.hackathon.tea.domain;
 
-import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
-
 import java.util.ArrayList;
 import java.util.List;
 

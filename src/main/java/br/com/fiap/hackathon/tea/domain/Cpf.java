@@ -1,8 +1,5 @@
 package br.com.fiap.hackathon.tea.domain;
 
-import br.com.fiap.hackathon.tea.domain.exception.CpfInvalidoException;
-import br.com.fiap.hackathon.tea.domain.exception.CpfObrigatorioException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +15,8 @@ public class Cpf {
     }
 
     public static Cpf of(String numero) {
-        if (numero == null || numero.isBlank()) {
-            return null;
+        if (numero == null) {
+            return new Cpf("");
         }
         return new Cpf(numero.replaceAll("\\D", ""));
     }
@@ -31,14 +28,18 @@ public class Cpf {
     public List<String> validarPendencias() {
         List<String> pendencias = new ArrayList<>();
 
-        if (!isValido(numero)) {
+        if (numero.isBlank()) {
+            pendencias.add(ERRO_CPF_OBRIGATORIO);
+        } else if (!isValido(numero)) {
             pendencias.add(ERRO_CPF_INVALIDO);
         }
         return pendencias;
     }
 
 
-    protected static boolean isValido(String cpf) {
+    private static boolean isValido(String numero) {
+        String cpf = numero.replaceAll("\\D", "");
+
         if (cpf.length() != 11) return false;
         if (cpf.chars().distinct().count() == 1) return false;
 

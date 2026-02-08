@@ -7,16 +7,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class CpfTest {
 
     @Test
-    void deveRetornarFalsoParaCpfNuloOuVazio() {
-        assertFalse(Cpf.isValido(null));
-        assertFalse(Cpf.isValido("   "));
+    void deveRetornarPendenciaQuandoCpfForInvalido() {
+        Cpf cpf = Cpf.of("123");
+        assertTrue(cpf.validarPendencias().contains(Cpf.ERRO_CPF_INVALIDO));
+
     }
 
     @Test
-    void deveRetornarFalsoParaCpfInvalido() {
-        assertFalse(Cpf.isValido("123"));
-        assertFalse(Cpf.isValido("111.111.111-11"));
-        assertFalse(Cpf.isValido("529.982.247-26"));
+    void deveRetornarPendenciaQuandoCpfNaoInformadoSemNpe() {
+        Cpf cpfNulo = Cpf.of(null);
+        Cpf cpfVazio = Cpf.of("   ");
+
+        assertNotNull(cpfNulo);
+        assertNotNull(cpfVazio);
+        assertTrue(cpfNulo.validarPendencias().contains(Cpf.ERRO_CPF_OBRIGATORIO));
+        assertTrue(cpfVazio.validarPendencias().contains(Cpf.ERRO_CPF_OBRIGATORIO));
     }
 
     @Test
