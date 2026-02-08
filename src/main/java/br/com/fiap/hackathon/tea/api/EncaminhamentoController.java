@@ -4,6 +4,7 @@ import br.com.fiap.hackathon.tea.api.dto.EncaminhamentoRequest;
 import br.com.fiap.hackathon.tea.api.dto.EncaminhamentoResponse;
 import br.com.fiap.hackathon.tea.api.mapper.EncaminhamentoMapper;
 import br.com.fiap.hackathon.tea.application.model.AgendamentoResponse;
+import br.com.fiap.hackathon.tea.application.model.ResultadoValidacao;
 import br.com.fiap.hackathon.tea.application.useCase.AgendarEncaminhamentoUseCase;
 import br.com.fiap.hackathon.tea.application.useCase.ValidarEncaminhamentoUseCase;
 import br.com.fiap.hackathon.tea.domain.Encaminhamento;
@@ -16,7 +17,7 @@ public class EncaminhamentoController {
 
     private final ValidarEncaminhamentoUseCase validarEncaminhamentoUseCase;
     private final AgendarEncaminhamentoUseCase agendarEncaminhamentoUseCase;
-    private EncaminhamentoMapper encaminhamentoMapper;
+    private final EncaminhamentoMapper encaminhamentoMapper;
 
     public EncaminhamentoController(ValidarEncaminhamentoUseCase validarEncaminhamentoUseCase, AgendarEncaminhamentoUseCase agendarEncaminhamentoUseCase, EncaminhamentoMapper encaminhamentoMapper) {
         this.validarEncaminhamentoUseCase = validarEncaminhamentoUseCase;
@@ -28,7 +29,11 @@ public class EncaminhamentoController {
     public ResponseEntity<EncaminhamentoResponse> validar(@RequestBody EncaminhamentoRequest request) {
 
         Encaminhamento domain = encaminhamentoMapper.toDomain(request);
-        validarEncaminhamentoUseCase.execute(domain);
+        ResultadoValidacao resultado = validarEncaminhamentoUseCase.execute(domain);
+
+        if (resultado.possuiPendencias()) {
+            return ResponseEntity.badRequest().body(new EncaminhamentoResponse(resultado.listarPendencias()));
+        }
 
         return ResponseEntity.ok().build();
     }

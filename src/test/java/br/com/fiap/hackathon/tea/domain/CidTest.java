@@ -1,38 +1,30 @@
 package br.com.fiap.hackathon.tea.domain;
 
-import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 import org.junit.jupiter.api.Test;
 
-import static br.com.fiap.hackathon.tea.domain.Cid.ERRO_CID_OBRIGATORIO;
-import static br.com.fiap.hackathon.tea.domain.Cid.ERRO_CID_TEA;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CidTest {
 
     @Test
-    void deveCriarCid_quandoForTea() {
-        assertDoesNotThrow(() -> new Cid("F84.0"));
+    void deveValidarFamiliaTea() {
+        assertTrue(Cid.ehCidTea("F84.0"));
+        assertTrue(Cid.ehCidTea("f84.1"));
+        assertFalse(Cid.ehCidTea("F90.0"));
     }
 
     @Test
-    void deveLancarException_quandoCidNaoForTea() {
-        ValidacaoException ex =  assertThrows(ValidacaoException.class, () -> new Cid("F90.0"));
-        assertEquals(ERRO_CID_TEA, ex.getMessage());
+    void deveRetornarPendenciaQuandoCidNaoForTea() {
+        Cid cid = Cid.of("F90.0");
+        assertTrue(cid.validarPendencias().contains(Cid.ERRO_CID_TEA));
     }
 
     @Test
-    void deveLancarException_quandoCidForNulo() {
-        ValidacaoException ex =  assertThrows(ValidacaoException.class, () -> new Cid(null));
-        assertEquals(ERRO_CID_OBRIGATORIO, ex.getMessage());
-    }
+    void deveCriarCidUppercaseQuandoInformado() {
+        Cid cid = Cid.of("f84.0");
 
-    @Test
-    void deveLancarException_quandoCidForVazio() {
-        ValidacaoException ex =  assertThrows(ValidacaoException.class, () -> new Cid(""));
-        assertEquals(ERRO_CID_OBRIGATORIO, ex.getMessage());
-
-        ValidacaoException ex1 =  assertThrows(ValidacaoException.class, () -> new Cid("  "));
-        assertEquals(ERRO_CID_OBRIGATORIO, ex1.getMessage());
+        assertNotNull(cid);
+        assertEquals("F84.0", cid.getCodigo());
     }
 
 }

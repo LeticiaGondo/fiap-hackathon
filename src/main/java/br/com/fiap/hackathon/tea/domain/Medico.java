@@ -2,6 +2,9 @@ package br.com.fiap.hackathon.tea.domain;
 
 import br.com.fiap.hackathon.tea.domain.exception.ValidacaoException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static br.com.fiap.hackathon.tea.domain.Encaminhamento.ERRO_MEDICO_OBRIGATORIO;
 
 public class Medico {
@@ -16,18 +19,6 @@ public class Medico {
     private String crmNumero;
 
     public Medico(String nome, String crmUf, String crmNumero) {
-
-        if (nome == null || nome.isBlank()) {
-            throw new ValidacaoException(ERRO_NOME);
-        }
-
-        if (crmUf == null || crmUf.isBlank()) {
-            throw new ValidacaoException(ERRO_CRM_UF);
-        }
-
-        if (crmNumero == null || crmNumero.isBlank()) {
-            throw new ValidacaoException(ERRO_CRM_NUMERO);
-        }
 
         this.nome = nome;
         this.crmUf = crmUf;
@@ -44,5 +35,23 @@ public class Medico {
 
     public String getCrmNumero() {
         return crmNumero;
+    }
+
+    public List<String> validarPendencias() {
+        List<String> pendencias = new ArrayList<>();
+
+        if (nome == null || nome.isBlank()) {
+            pendencias.add(ERRO_NOME);
+        }
+
+        if (crmUf == null || crmUf.isBlank()) {
+            pendencias.add(ERRO_CRM_UF);
+        }
+
+        if (crmNumero == null || crmNumero.isBlank()) {
+            pendencias.add(ERRO_CRM_NUMERO);
+        }
+
+        return pendencias;
     }
 }
